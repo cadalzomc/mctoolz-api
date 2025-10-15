@@ -10,10 +10,4 @@ export type TResponseCode =
   | "Disabled"
   | "Invalid";
 
-export type TRole =
-  | "SUPER"
-  | "ADMIN"
-  | "MANAGER"
-  | "CASHIER"
-  | "CONSIGNOR"
-  | "CONSIGNEE";
+export type TRole = "SUPER" | "ADMIN" | "MANAGER" | "CASHIER" | "CONSIGNOR" | "CONSIGNEE";
