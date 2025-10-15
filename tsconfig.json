@@ -20,7 +20,7 @@
     "strictBindCallApply": false,
     "noFallthroughCasesInSwitch": false,
     "outDir": "./dist",
-    "ignoreDeprecations": "5.0",
+    "baseUrl": "./",
     "paths": {
       "@/*": ["./src/*"],
       "@test/*": ["./test/*"],
