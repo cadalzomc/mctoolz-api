@@ -185,6 +185,10 @@ const config = {
         "fromEnvVar": null,
         "value": "windows",
         "native": true
+      },
+      {
+        "fromEnvVar": null,
+        "value": "debian-openssl-3.0.x"
       }
     ],
     "previewFeatures": [],
@@ -192,7 +196,7 @@ const config = {
     "isCustomOutput": true
   },
   "relativeEnvPaths": {
-    "rootEnvPath": "../../.env",
+    "rootEnvPath": null,
     "schemaEnvPath": "../../.env"
   },
   "relativePath": "..",
@@ -202,6 +206,7 @@ const config = {
     "db"
   ],
   "activeProvider": "postgresql",
+  "postinstall": false,
   "inlineDatasources": {
     "db": {
       "url": {
@@ -210,8 +215,8 @@ const config = {
       }
     }
   },
-  "inlineSchema": "generator client {\n  provider = \"prisma-client-js\"\n  output   = \"./client\"\n}\n\ndatasource db {\n  provider  = \"postgresql\"\n  url       = env(\"DATABASE_URL\")\n  directUrl = env(\"DIRECT_URL\")\n}\n\nenum EUserRole {\n  SUPER\n  ADMIN\n  CONSIGNEE\n  CONSIGNOR\n  MANAGER\n  CASHIER\n  GUEST\n}\n\nenum EUserStatus {\n  ACTIVE\n  INACTIVE\n  LOCKED\n  FOR_VERIFICATION\n}\n\nenum EProfileStatus {\n  ACTIVE\n  INACTIVE\n}\n\nmodel User {\n  id        Int         @id @default(autoincrement())\n  name      String      @default(\"\") @db.VarChar(90)\n  email     String      @unique\n  password  String      @db.VarChar(300)\n  role      EUserRole   @default(GUEST)\n  status    EUserStatus @default(FOR_VERIFICATION)\n  createdAt DateTime    @default(now()) @map(\"created_at\")\n  createdBy String?     @map(\"created_by\") @db.VarChar(60)\n  updatedAt DateTime?   @map(\"updated_at\")\n  updatedBy String?     @map(\"updated_by\") @db.VarChar(60)\n  isDeleted Boolean     @default(false) @map(\"is_deleted\")\n  profile   Profile?\n\n  @@index([isDeleted])\n  @@map(\"users\")\n}\n\nmodel Profile {\n  id        Int            @id @default(autoincrement())\n  userId    Int            @unique @map(\"user_id\")\n  user      User           @relation(fields: [userId], references: [id], onDelete: Cascade)\n  name      String         @db.VarChar(35)\n  email     String         @unique\n  contact   String?        @db.VarChar(15)\n  address   String?        @db.VarChar(200)\n  photo     String?        @db.VarChar(300)\n  status    EProfileStatus @default(INACTIVE)\n  createdAt DateTime       @default(now()) @map(\"created_at\")\n  createdBy String?        @map(\"created_by\") @db.VarChar(60)\n  updatedAt DateTime?      @map(\"updated_at\")\n  updatedBy String?        @map(\"updated_by\") @db.VarChar(60)\n  isDeleted Boolean        @default(false) @map(\"is_deleted\")\n\n  @@index([isDeleted])\n  @@map(\"profiles\")\n}\n",
-  "inlineSchemaHash": "a58e9a3bf9732a4648f80802db708098551d81d7a8cc2717fa66da98e62a27ac",
+  "inlineSchema": "generator client {\n  provider      = \"prisma-client-js\"\n  output        = \"./client\"\n  binaryTargets = [\"native\", \"debian-openssl-3.0.x\"]\n}\n\ndatasource db {\n  provider  = \"postgresql\"\n  url       = env(\"DATABASE_URL\")\n  directUrl = env(\"DIRECT_URL\")\n}\n\nenum EUserRole {\n  SUPER\n  ADMIN\n  CONSIGNEE\n  CONSIGNOR\n  MANAGER\n  CASHIER\n  GUEST\n}\n\nenum EUserStatus {\n  ACTIVE\n  INACTIVE\n  LOCKED\n  FOR_VERIFICATION\n}\n\nenum EProfileStatus {\n  ACTIVE\n  INACTIVE\n}\n\nmodel User {\n  id        Int         @id @default(autoincrement())\n  name      String      @default(\"\") @db.VarChar(90)\n  email     String      @unique\n  password  String      @db.VarChar(300)\n  role      EUserRole   @default(GUEST)\n  status    EUserStatus @default(FOR_VERIFICATION)\n  createdAt DateTime    @default(now()) @map(\"created_at\")\n  createdBy String?     @map(\"created_by\") @db.VarChar(60)\n  updatedAt DateTime?   @map(\"updated_at\")\n  updatedBy String?     @map(\"updated_by\") @db.VarChar(60)\n  isDeleted Boolean     @default(false) @map(\"is_deleted\")\n  profile   Profile?\n\n  @@index([isDeleted])\n  @@map(\"users\")\n}\n\nmodel Profile {\n  id        Int            @id @default(autoincrement())\n  userId    Int            @unique @map(\"user_id\")\n  user      User           @relation(fields: [userId], references: [id], onDelete: Cascade)\n  name      String         @db.VarChar(35)\n  email     String         @unique\n  contact   String?        @db.VarChar(15)\n  address   String?        @db.VarChar(200)\n  photo     String?        @db.VarChar(300)\n  status    EProfileStatus @default(INACTIVE)\n  createdAt DateTime       @default(now()) @map(\"created_at\")\n  createdBy String?        @map(\"created_by\") @db.VarChar(60)\n  updatedAt DateTime?      @map(\"updated_at\")\n  updatedBy String?        @map(\"updated_by\") @db.VarChar(60)\n  isDeleted Boolean        @default(false) @map(\"is_deleted\")\n\n  @@index([isDeleted])\n  @@map(\"profiles\")\n}\n",
+  "inlineSchemaHash": "bef4ab04c0aabf0387203ac7893840ab35ee6f447aa893459e240b4418fbd49a",
   "copyEngine": true
 }
 
@@ -252,6 +257,10 @@ Object.assign(exports, Prisma)
 // file annotations for bundling tools to include these files
 path.join(__dirname, "query_engine-windows.dll.node");
 path.join(process.cwd(), "prisma/client/query_engine-windows.dll.node")
+
+// file annotations for bundling tools to include these files
+path.join(__dirname, "libquery_engine-debian-openssl-3.0.x.so.node");
+path.join(process.cwd(), "prisma/client/libquery_engine-debian-openssl-3.0.x.so.node")
 // file annotations for bundling tools to include these files
 path.join(__dirname, "schema.prisma");
 path.join(process.cwd(), "prisma/client/schema.prisma")
