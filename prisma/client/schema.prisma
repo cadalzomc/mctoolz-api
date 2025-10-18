@@ -1,0 +1,70 @@
+generator client {
+  provider = "prisma-client-js"
+  output   = "./client"
+}
+
+datasource db {
+  provider  = "postgresql"
+  url       = env("DATABASE_URL")
+  directUrl = env("DIRECT_URL")
+}
+
+enum EUserRole {
+  SUPER
+  ADMIN
+  CONSIGNEE
+  CONSIGNOR
+  MANAGER
+  CASHIER
+  GUEST
+}
+
+enum EUserStatus {
+  ACTIVE
+  INACTIVE
+  LOCKED
+  FOR_VERIFICATION
+}
+
+enum EProfileStatus {
+  ACTIVE
+  INACTIVE
+}
+
+model User {
+  id        Int         @id @default(autoincrement())
+  name      String      @default("") @db.VarChar(90)
+  email     String      @unique
+  password  String      @db.VarChar(300)
+  role      EUserRole   @default(GUEST)
+  status    EUserStatus @default(FOR_VERIFICATION)
+  createdAt DateTime    @default(now()) @map("created_at")
+  createdBy String?     @map("created_by") @db.VarChar(60)
+  updatedAt DateTime?   @map("updated_at")
+  updatedBy String?     @map("updated_by") @db.VarChar(60)
+  isDeleted Boolean     @default(false) @map("is_deleted")
+  profile   Profile?
+
+  @@index([isDeleted])
+  @@map("users")
+}
+
+model Profile {
+  id        Int            @id @default(autoincrement())
+  userId    Int            @unique @map("user_id")
+  user      User           @relation(fields: [userId], references: [id], onDelete: Cascade)
+  name      String         @db.VarChar(35)
+  email     String         @unique
+  contact   String?        @db.VarChar(15)
+  address   String?        @db.VarChar(200)
+  photo     String?        @db.VarChar(300)
+  status    EProfileStatus @default(INACTIVE)
+  createdAt DateTime       @default(now()) @map("created_at")
+  createdBy String?        @map("created_by") @db.VarChar(60)
+  updatedAt DateTime?      @map("updated_at")
+  updatedBy String?        @map("updated_by") @db.VarChar(60)
+  isDeleted Boolean        @default(false) @map("is_deleted")
+
+  @@index([isDeleted])
+  @@map("profiles")
+}

@@ -7,7 +7,7 @@ export class HealthController {
   constructor(private readonly service: HealthService) {}
 
   @Get()
-  getHome() {
-    return this.service.GetHome();
+  async getHealth() {
+    return this.service.GetHealth();
   }
 }
