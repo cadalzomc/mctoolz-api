@@ -1,6 +1,6 @@
 export interface IJwtValue {
   sub: string;
-  username: string;
+  email: string;
   role: string;
   exp: number;
   iat: number;
@@ -8,6 +8,6 @@ export interface IJwtValue {
 
 export interface IJwtPayload {
   sub: string;
-  username: string;
+  email: string;
   role: string;
 }

@@ -1,6 +1,6 @@
 import { Body, Controller, Post, UseGuards } from "@nestjs/common";
 
-import { DtoRegister } from "@/lib/models";
+import { DtoRegister, DtoVerify } from "@/lib/models";
 
 import { KeyGuard } from "../guards/key.guard";
 import { AuthService } from "../services/auth.service";
@@ -13,5 +13,10 @@ export class AuthController {
   @Post("register")
   Register(@Body() payload: DtoRegister) {
     return this.auth.Register(payload);
+  }
+
+  @Post("verify")
+  VerifyAndLogin(@Body() payload: DtoVerify) {
+    return this.auth.Verify(payload.email, payload.token);
   }
 }

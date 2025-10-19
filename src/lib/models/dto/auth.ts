@@ -19,3 +19,13 @@ export class DtoRegister {
   @IsString()
   passwordConfirm?: string;
 }
+
+export class DtoVerify {
+  @IsEmail({}, { message: "Invalid email format" })
+  @IsNotEmpty({ message: "Email is required" })
+  email!: string;
+
+  @IsString({ message: "Must be a string" })
+  @IsNotEmpty({ message: "Required" })
+  token!: string;
+}

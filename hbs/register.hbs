@@ -1,0 +1,100 @@
+<html
+  xmlns="http://www.w3.org/1999/xhtml"
+  xmlns:v="urn:schemas-microsoft-com:vml"
+  xmlns:o="urn:schemas-microsoft-com:office:office"
+>
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Account Verification</title>
+    <style type="text/css">
+      body {
+        width: 100% !important;
+        -webkit-text-size-adjust: 100%;
+        -ms-text-size-adjust: 100%;
+        margin: 0;
+        padding: 0;
+        line-height: 100%;
+      }
+      [style*="Arial"] {
+        font-family: Arial, sans-serif !important;
+      }
+      img {
+        outline: none;
+        text-decoration: none;
+        border: none;
+        -ms-interpolation-mode: bicubic;
+        max-width: 100%;
+        height: auto;
+      }
+      a {
+        text-decoration: none;
+      }
+      table td {
+        border-collapse: collapse;
+      }
+      table {
+        border-collapse: collapse;
+        mso-table-lspace: 0pt;
+        mso-table-rspace: 0pt;
+      }
+      .wrapper {
+        width: 100%;
+        table-layout: fixed;
+        -webkit-font-smoothing: antialiased;
+      }
+      .outer {
+        width: 600px;
+        margin: 0 auto;
+      }
+      @media screen and (max-width: 600px) {
+        .outer {
+          width: 100%;
+        }
+      }
+    </style>
+  </head>
+  <body style="margin: 0; padding: 0;">
+    <table class="wrapper" width="100%" cellpadding="0" cellspacing="0" role="presentation">
+      <tr>
+        <td align="center">
+          <table class="outer" width="600" cellpadding="0" cellspacing="0" role="presentation">
+            <tr>
+              <td style="background-color: #eee; padding: 20px 0; text-align: center;">
+                <img src="{{header.logo}}" alt="{{header.name}}" width="150" />
+              </td>
+            </tr>
+            <tr>
+              <td
+                style="background-color: #fff; padding: 30px; font-family: Arial, sans-serif; font-size: 16px; line-height: 24px; border: 1px solid #eee;"
+              >
+                <h1
+                  style="margin-top: 0; margin-bottom: 20px; font-size: 24px; font-weight: bold;"
+                >Welcome to Sheflpoints, {{data.name}}!</h1>
+                <p style="margin-bottom: 20px;">To verify your account, please use the following One
+                  Time Password:</p>
+                <p
+                  style="text-align: center; margin-bottom: 30px; margin-top: 30px; letter-spacing: 10px;"
+                >
+                  <strong
+                    style="font-size: 28px; background-color: #26cf5e; padding: 10px 20px; border-radius: 5px;"
+                  >{{data.otp}}</strong>
+                </p>
+                <p style="margin-bottom: 0;">This is valid for a short period of time. Please enter
+                  it to complete your registration.</p>
+              </td>
+            </tr>
+            <tr>
+              <td
+                style="padding: 20px; text-align: center; background-color: #e0e0e0; font-family: Arial, sans-serif; font-size: 12px; color: #666;"
+              >
+                <p>{{header.copyright}}.</p>
+                <p><a href="{{app.url}}" style="color: #666;">{{header.domain}}</a></p>
+              </td>
+            </tr>
+          </table>
+        </td>
+      </tr>
+    </table>
+  </body>
+</html>

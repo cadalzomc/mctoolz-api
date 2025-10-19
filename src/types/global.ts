@@ -1,5 +1,6 @@
 export type TResponseCode =
   | "Success"
+  | "Expired"
   | "Failed"
   | "Error"
   | "Duplicate"
@@ -10,4 +11,6 @@ export type TResponseCode =
   | "Disabled"
   | "Invalid";
 
-export type TRole = "SUPER" | "ADMIN" | "MANAGER" | "CASHIER" | "CONSIGNOR" | "CONSIGNEE" | "GUEST";
+export type TRole = "SUPER" | "ADMIN" | "GUEST";
+
+export type TTemplateName = "register";
