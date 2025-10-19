@@ -20,7 +20,7 @@ import { MailerWorker } from "../workers/mailer.worker";
             port: cn?.port,
             username: cn?.username,
             password: cn?.password,
-            tls: {},
+            ...(cn?.isTls ? { tls: {} } : {}),
           },
         };
       },

@@ -36,5 +36,6 @@ export const EnvConfig = () => ({
     port: Number(process.env.REDIS_PORT),
     username: process.env.REDIS_USERNAME,
     password: process.env.REDIS_PASSWORD,
+    isTls: process.env.REDIS_TLS === "1",
   },
 });

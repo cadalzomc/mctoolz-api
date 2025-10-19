@@ -38,4 +38,5 @@ export interface IConfigRedis {
   port: number;
   username: string;
   password: string;
+  isTls?: boolean;
 }
