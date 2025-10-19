@@ -10,7 +10,7 @@ import { MulterExceptionFilter, ValidationExceptionFactory } from "./lib/extensi
 import { RouteLogger } from "./lib/extensions/logger";
 
 async function bootstrap() {
-  const appPrefix = process.env.APP_NAME || "Shelfpoints";
+  const appPrefix = process.env.APP_NAME || "MCToolz";
   const corsOrigin = process.env.APP_CORS || "http://localhost:3355";
 
   const app = await NestFactory.create<NestExpressApplication>(AppModule, {
