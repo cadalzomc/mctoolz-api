@@ -13,7 +13,7 @@ export class MailerService {
     this.transporter = nodemailer.createTransport({
       service: options.transport.service,
       auth: {
-        user: options.transport.auth.email,
+        user: options.transport.auth.username,
         pass: options.transport.auth.password,
       },
       debug: options.debug,

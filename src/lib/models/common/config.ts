@@ -18,7 +18,7 @@ export interface IConfigJwt {
 
 export interface IConfigSender {
   name: string;
-  email: string;
+  username: string;
   password: string;
 }
 

@@ -16,7 +16,7 @@ export interface IMail {
 }
 
 export interface IMailerAuth {
-  email: string;
+  username: string;
   password: string;
 }
 
