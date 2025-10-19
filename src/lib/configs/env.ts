@@ -21,12 +21,10 @@ export const EnvConfig = () => ({
     customer: process.env.WEB_CUSTOMER || "http://localhost:3000",
   },
   mailer: {
-    transport: {
-      service: process.env.MAILER_SERVICE || "gmail",
-      auth: {
-        username: process.env.MAILER_USERNAME || "",
-        password: process.env.MAILER_PASSWORD || "",
-      },
+    service: process.env.MAILER_SERVICE || "gmail",
+    auth: {
+      username: process.env.MAILER_USERNAME || "",
+      password: process.env.MAILER_PASSWORD || "",
     },
     defaults: {
       from: process.env.MAILER_SENDER || "",

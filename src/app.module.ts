@@ -25,12 +25,12 @@ import { IConfigMailer, IMailerOption } from "./lib/models";
           transport: {
             service: cm?.service,
             auth: {
-              username: cm?.sender.username ?? "",
+              email: cm?.sender.email ?? "",
               password: cm?.sender.password ?? "",
             },
           },
           defaults: {
-            from: `"${cm?.sender.name}" <${cm?.sender.username}>`,
+            from: `"${cm?.sender.name}" <${cm?.sender.email}>`,
           },
           debug: cm?.debug ?? false,
         };
