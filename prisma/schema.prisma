@@ -10,6 +10,12 @@ datasource db {
   directUrl = env("DIRECT_URL")
 }
 
+enum ETokenType {
+  KEY
+  OTP
+  HASH
+}
+
 enum EUserRole {
   SUPER
   ADMIN
@@ -30,6 +36,18 @@ enum EUserStatus {
 enum EProfileStatus {
   ACTIVE
   INACTIVE
+}
+
+model Token {
+  id        Int        @id @default(autoincrement())
+  type      ETokenType
+  token     String     @unique
+  expiresAt DateTime   @map("expires_at")
+  owner     String
+  purpose   String?
+  createdAt DateTime   @default(now()) @map("created_at")
+
+  @@map("tokens")
 }
 
 model User {

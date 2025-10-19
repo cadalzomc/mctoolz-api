@@ -8,8 +8,11 @@ import { KeyGuard } from "../guards/key.guard";
 import { AuthService } from "../services/auth.service";
 import { JwtStrategy } from "../utils/jwt.strategy";
 
+import { QueueModule } from "./queue.module";
+
 @Module({
   imports: [
+    QueueModule,
     PassportModule.register({ defaultStrategy: "jwt" }),
     JwtModule.registerAsync({
       inject: [ConfigService],

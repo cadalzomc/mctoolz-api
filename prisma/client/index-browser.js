@@ -120,6 +120,16 @@ exports.Prisma.TransactionIsolationLevel = makeStrictEnum({
   Serializable: 'Serializable'
 });
 
+exports.Prisma.TokenScalarFieldEnum = {
+  id: 'id',
+  type: 'type',
+  token: 'token',
+  expiresAt: 'expiresAt',
+  owner: 'owner',
+  purpose: 'purpose',
+  createdAt: 'createdAt'
+};
+
 exports.Prisma.UserScalarFieldEnum = {
   id: 'id',
   name: 'name',
@@ -164,6 +174,12 @@ exports.Prisma.NullsOrder = {
   first: 'first',
   last: 'last'
 };
+exports.ETokenType = exports.$Enums.ETokenType = {
+  KEY: 'KEY',
+  OTP: 'OTP',
+  HASH: 'HASH'
+};
+
 exports.EUserRole = exports.$Enums.EUserRole = {
   SUPER: 'SUPER',
   ADMIN: 'ADMIN',
@@ -187,6 +203,7 @@ exports.EProfileStatus = exports.$Enums.EProfileStatus = {
 };
 
 exports.Prisma.ModelName = {
+  Token: 'Token',
   User: 'User',
   Profile: 'Profile'
 };

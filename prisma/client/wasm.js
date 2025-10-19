@@ -92,6 +92,16 @@ exports.Prisma.TransactionIsolationLevel = makeStrictEnum({
   Serializable: 'Serializable'
 });
 
+exports.Prisma.TokenScalarFieldEnum = {
+  id: 'id',
+  type: 'type',
+  token: 'token',
+  expiresAt: 'expiresAt',
+  owner: 'owner',
+  purpose: 'purpose',
+  createdAt: 'createdAt'
+};
+
 exports.Prisma.UserScalarFieldEnum = {
   id: 'id',
   name: 'name',
@@ -136,6 +146,12 @@ exports.Prisma.NullsOrder = {
   first: 'first',
   last: 'last'
 };
+exports.ETokenType = exports.$Enums.ETokenType = {
+  KEY: 'KEY',
+  OTP: 'OTP',
+  HASH: 'HASH'
+};
+
 exports.EUserRole = exports.$Enums.EUserRole = {
   SUPER: 'SUPER',
   ADMIN: 'ADMIN',
@@ -159,6 +175,7 @@ exports.EProfileStatus = exports.$Enums.EProfileStatus = {
 };
 
 exports.Prisma.ModelName = {
+  Token: 'Token',
   User: 'User',
   Profile: 'Profile'
 };
@@ -205,7 +222,6 @@ const config = {
     "db"
   ],
   "activeProvider": "postgresql",
-  "postinstall": false,
   "inlineDatasources": {
     "db": {
       "url": {
@@ -214,13 +230,13 @@ const config = {
       }
     }
   },
-  "inlineSchema": "generator client {\n  provider      = \"prisma-client-js\"\n  output        = \"./client\"\n  binaryTargets = [\"native\", \"debian-openssl-3.0.x\"]\n}\n\ndatasource db {\n  provider  = \"postgresql\"\n  url       = env(\"DATABASE_URL\")\n  directUrl = env(\"DIRECT_URL\")\n}\n\nenum EUserRole {\n  SUPER\n  ADMIN\n  CONSIGNEE\n  CONSIGNOR\n  MANAGER\n  CASHIER\n  GUEST\n}\n\nenum EUserStatus {\n  ACTIVE\n  INACTIVE\n  LOCKED\n  FOR_VERIFICATION\n}\n\nenum EProfileStatus {\n  ACTIVE\n  INACTIVE\n}\n\nmodel User {\n  id        Int         @id @default(autoincrement())\n  name      String      @default(\"\") @db.VarChar(90)\n  email     String      @unique\n  password  String      @db.VarChar(300)\n  role      EUserRole   @default(GUEST)\n  status    EUserStatus @default(FOR_VERIFICATION)\n  createdAt DateTime    @default(now()) @map(\"created_at\")\n  createdBy String?     @map(\"created_by\") @db.VarChar(60)\n  updatedAt DateTime?   @map(\"updated_at\")\n  updatedBy String?     @map(\"updated_by\") @db.VarChar(60)\n  isDeleted Boolean     @default(false) @map(\"is_deleted\")\n  profile   Profile?\n\n  @@index([isDeleted])\n  @@map(\"users\")\n}\n\nmodel Profile {\n  id        Int            @id @default(autoincrement())\n  userId    Int            @unique @map(\"user_id\")\n  user      User           @relation(fields: [userId], references: [id], onDelete: Cascade)\n  name      String         @db.VarChar(35)\n  email     String         @unique\n  contact   String?        @db.VarChar(15)\n  address   String?        @db.VarChar(200)\n  photo     String?        @db.VarChar(300)\n  status    EProfileStatus @default(INACTIVE)\n  createdAt DateTime       @default(now()) @map(\"created_at\")\n  createdBy String?        @map(\"created_by\") @db.VarChar(60)\n  updatedAt DateTime?      @map(\"updated_at\")\n  updatedBy String?        @map(\"updated_by\") @db.VarChar(60)\n  isDeleted Boolean        @default(false) @map(\"is_deleted\")\n\n  @@index([isDeleted])\n  @@map(\"profiles\")\n}\n",
-  "inlineSchemaHash": "bef4ab04c0aabf0387203ac7893840ab35ee6f447aa893459e240b4418fbd49a",
+  "inlineSchema": "generator client {\n  provider      = \"prisma-client-js\"\n  output        = \"./client\"\n  binaryTargets = [\"native\", \"debian-openssl-3.0.x\"]\n}\n\ndatasource db {\n  provider  = \"postgresql\"\n  url       = env(\"DATABASE_URL\")\n  directUrl = env(\"DIRECT_URL\")\n}\n\nenum ETokenType {\n  KEY\n  OTP\n  HASH\n}\n\nenum EUserRole {\n  SUPER\n  ADMIN\n  CONSIGNEE\n  CONSIGNOR\n  MANAGER\n  CASHIER\n  GUEST\n}\n\nenum EUserStatus {\n  ACTIVE\n  INACTIVE\n  LOCKED\n  FOR_VERIFICATION\n}\n\nenum EProfileStatus {\n  ACTIVE\n  INACTIVE\n}\n\nmodel Token {\n  id        Int        @id @default(autoincrement())\n  type      ETokenType\n  token     String     @unique\n  expiresAt DateTime   @map(\"expires_at\")\n  owner     String\n  purpose   String?\n  createdAt DateTime   @default(now()) @map(\"created_at\")\n\n  @@map(\"tokens\")\n}\n\nmodel User {\n  id        Int         @id @default(autoincrement())\n  name      String      @default(\"\") @db.VarChar(90)\n  email     String      @unique\n  password  String      @db.VarChar(300)\n  role      EUserRole   @default(GUEST)\n  status    EUserStatus @default(FOR_VERIFICATION)\n  createdAt DateTime    @default(now()) @map(\"created_at\")\n  createdBy String?     @map(\"created_by\") @db.VarChar(60)\n  updatedAt DateTime?   @map(\"updated_at\")\n  updatedBy String?     @map(\"updated_by\") @db.VarChar(60)\n  isDeleted Boolean     @default(false) @map(\"is_deleted\")\n  profile   Profile?\n\n  @@index([isDeleted])\n  @@map(\"users\")\n}\n\nmodel Profile {\n  id        Int            @id @default(autoincrement())\n  userId    Int            @unique @map(\"user_id\")\n  user      User           @relation(fields: [userId], references: [id], onDelete: Cascade)\n  name      String         @db.VarChar(35)\n  email     String         @unique\n  contact   String?        @db.VarChar(15)\n  address   String?        @db.VarChar(200)\n  photo     String?        @db.VarChar(300)\n  status    EProfileStatus @default(INACTIVE)\n  createdAt DateTime       @default(now()) @map(\"created_at\")\n  createdBy String?        @map(\"created_by\") @db.VarChar(60)\n  updatedAt DateTime?      @map(\"updated_at\")\n  updatedBy String?        @map(\"updated_by\") @db.VarChar(60)\n  isDeleted Boolean        @default(false) @map(\"is_deleted\")\n\n  @@index([isDeleted])\n  @@map(\"profiles\")\n}\n",
+  "inlineSchemaHash": "2dac59423b6294643af587fbbd4877b380aa5399db7ae36e97d7b1ea0565736f",
   "copyEngine": true
 }
 config.dirname = '/'
 
-config.runtimeDataModel = JSON.parse("{\"models\":{\"User\":{\"fields\":[{\"name\":\"id\",\"kind\":\"scalar\",\"type\":\"Int\"},{\"name\":\"name\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"email\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"password\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"role\",\"kind\":\"enum\",\"type\":\"EUserRole\"},{\"name\":\"status\",\"kind\":\"enum\",\"type\":\"EUserStatus\"},{\"name\":\"createdAt\",\"kind\":\"scalar\",\"type\":\"DateTime\",\"dbName\":\"created_at\"},{\"name\":\"createdBy\",\"kind\":\"scalar\",\"type\":\"String\",\"dbName\":\"created_by\"},{\"name\":\"updatedAt\",\"kind\":\"scalar\",\"type\":\"DateTime\",\"dbName\":\"updated_at\"},{\"name\":\"updatedBy\",\"kind\":\"scalar\",\"type\":\"String\",\"dbName\":\"updated_by\"},{\"name\":\"isDeleted\",\"kind\":\"scalar\",\"type\":\"Boolean\",\"dbName\":\"is_deleted\"},{\"name\":\"profile\",\"kind\":\"object\",\"type\":\"Profile\",\"relationName\":\"ProfileToUser\"}],\"dbName\":\"users\"},\"Profile\":{\"fields\":[{\"name\":\"id\",\"kind\":\"scalar\",\"type\":\"Int\"},{\"name\":\"userId\",\"kind\":\"scalar\",\"type\":\"Int\",\"dbName\":\"user_id\"},{\"name\":\"user\",\"kind\":\"object\",\"type\":\"User\",\"relationName\":\"ProfileToUser\"},{\"name\":\"name\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"email\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"contact\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"address\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"photo\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"status\",\"kind\":\"enum\",\"type\":\"EProfileStatus\"},{\"name\":\"createdAt\",\"kind\":\"scalar\",\"type\":\"DateTime\",\"dbName\":\"created_at\"},{\"name\":\"createdBy\",\"kind\":\"scalar\",\"type\":\"String\",\"dbName\":\"created_by\"},{\"name\":\"updatedAt\",\"kind\":\"scalar\",\"type\":\"DateTime\",\"dbName\":\"updated_at\"},{\"name\":\"updatedBy\",\"kind\":\"scalar\",\"type\":\"String\",\"dbName\":\"updated_by\"},{\"name\":\"isDeleted\",\"kind\":\"scalar\",\"type\":\"Boolean\",\"dbName\":\"is_deleted\"}],\"dbName\":\"profiles\"}},\"enums\":{},\"types\":{}}")
+config.runtimeDataModel = JSON.parse("{\"models\":{\"Token\":{\"fields\":[{\"name\":\"id\",\"kind\":\"scalar\",\"type\":\"Int\"},{\"name\":\"type\",\"kind\":\"enum\",\"type\":\"ETokenType\"},{\"name\":\"token\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"expiresAt\",\"kind\":\"scalar\",\"type\":\"DateTime\",\"dbName\":\"expires_at\"},{\"name\":\"owner\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"purpose\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"createdAt\",\"kind\":\"scalar\",\"type\":\"DateTime\",\"dbName\":\"created_at\"}],\"dbName\":\"tokens\"},\"User\":{\"fields\":[{\"name\":\"id\",\"kind\":\"scalar\",\"type\":\"Int\"},{\"name\":\"name\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"email\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"password\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"role\",\"kind\":\"enum\",\"type\":\"EUserRole\"},{\"name\":\"status\",\"kind\":\"enum\",\"type\":\"EUserStatus\"},{\"name\":\"createdAt\",\"kind\":\"scalar\",\"type\":\"DateTime\",\"dbName\":\"created_at\"},{\"name\":\"createdBy\",\"kind\":\"scalar\",\"type\":\"String\",\"dbName\":\"created_by\"},{\"name\":\"updatedAt\",\"kind\":\"scalar\",\"type\":\"DateTime\",\"dbName\":\"updated_at\"},{\"name\":\"updatedBy\",\"kind\":\"scalar\",\"type\":\"String\",\"dbName\":\"updated_by\"},{\"name\":\"isDeleted\",\"kind\":\"scalar\",\"type\":\"Boolean\",\"dbName\":\"is_deleted\"},{\"name\":\"profile\",\"kind\":\"object\",\"type\":\"Profile\",\"relationName\":\"ProfileToUser\"}],\"dbName\":\"users\"},\"Profile\":{\"fields\":[{\"name\":\"id\",\"kind\":\"scalar\",\"type\":\"Int\"},{\"name\":\"userId\",\"kind\":\"scalar\",\"type\":\"Int\",\"dbName\":\"user_id\"},{\"name\":\"user\",\"kind\":\"object\",\"type\":\"User\",\"relationName\":\"ProfileToUser\"},{\"name\":\"name\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"email\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"contact\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"address\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"photo\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"status\",\"kind\":\"enum\",\"type\":\"EProfileStatus\"},{\"name\":\"createdAt\",\"kind\":\"scalar\",\"type\":\"DateTime\",\"dbName\":\"created_at\"},{\"name\":\"createdBy\",\"kind\":\"scalar\",\"type\":\"String\",\"dbName\":\"created_by\"},{\"name\":\"updatedAt\",\"kind\":\"scalar\",\"type\":\"DateTime\",\"dbName\":\"updated_at\"},{\"name\":\"updatedBy\",\"kind\":\"scalar\",\"type\":\"String\",\"dbName\":\"updated_by\"},{\"name\":\"isDeleted\",\"kind\":\"scalar\",\"type\":\"Boolean\",\"dbName\":\"is_deleted\"}],\"dbName\":\"profiles\"}},\"enums\":{},\"types\":{}}")
 defineDmmfProperty(exports.Prisma, config.runtimeDataModel)
 config.engineWasm = {
   getRuntime: async () => require('./query_engine_bg.js'),

@@ -1,18 +1,41 @@
 import { Module } from "@nestjs/common";
-import { ConfigModule } from "@nestjs/config";
+import { ConfigModule, ConfigService } from "@nestjs/config";
 import { JwtModule } from "@nestjs/jwt";
 
 import { AuthModule } from "./core/modules/auth.module";
 import { DbModule } from "./core/modules/db.module";
 import { HealthModule } from "./core/modules/health.module";
+import { MailerModule } from "./core/modules/mailer.module";
 import { UserModule } from "./core/modules/user.module";
 import { EnvConfig } from "./lib/configs/env";
+import { IConfigMailer, IMailerOption } from "./lib/models";
 
 @Module({
   imports: [
     ConfigModule.forRoot({ cache: true, isGlobal: true, load: [EnvConfig] }),
     JwtModule.register({
       global: true,
+    }),
+    MailerModule.forRootAsync({
+      imports: [ConfigModule],
+      inject: [ConfigService],
+      useFactory: (cs: ConfigService) => {
+        const cm = cs.get<IConfigMailer>("mailer");
+        const opt: IMailerOption = {
+          transport: {
+            service: cm?.service,
+            auth: {
+              username: cm?.sender.username ?? "",
+              password: cm?.sender.password ?? "",
+            },
+          },
+          defaults: {
+            from: `"${cm?.sender.name}" <${cm?.sender.username}>`,
+          },
+          debug: cm?.debug ?? false,
+        };
+        return opt;
+      },
     }),
     AuthModule,
     DbModule,

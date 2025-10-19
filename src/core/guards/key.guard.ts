@@ -7,7 +7,7 @@ export class KeyGuard implements CanActivate {
     const req = context.switchToHttp().getRequest<Request>();
     const key = req.headers["x-niftyers"];
     if (key !== process.env.APP_KEY) {
-      throw new ForbiddenException("Request is not allowed. Contact niftyers for access");
+      throw new ForbiddenException("Request is not allowed. Contact admin for access");
     }
     return true;
   }
