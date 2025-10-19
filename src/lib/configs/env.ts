@@ -30,9 +30,9 @@ export const EnvConfig = () => ({
     debug: process.env.MAILER_DEBUG === "1",
   },
   redis: {
-    host: process.env.REDIS_HOST || "127.0.0.1",
-    port: Number(process.env.REDIS_PORT || "6380"),
-    username: process.env.REDIS_USERNAME || "",
-    password: process.env.REDIS_PASSWORD || "",
+    host: process.env.REDIS_HOST,
+    port: Number(process.env.REDIS_PORT),
+    username: process.env.REDIS_USERNAME,
+    password: process.env.REDIS_PASSWORD,
   },
 });
