@@ -21,6 +21,7 @@ import { IConfigMailer, IMailerOption } from "./lib/models";
       inject: [ConfigService],
       useFactory: (cs: ConfigService) => {
         const cm = cs.get<IConfigMailer>("mailer");
+
         const opt: IMailerOption = {
           transport: {
             service: cm?.service,

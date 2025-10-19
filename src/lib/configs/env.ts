@@ -22,7 +22,7 @@ export const EnvConfig = () => ({
   },
   mailer: {
     service: process.env.MAILER_SERVICE || "gmail",
-    auth: {
+    sender: {
       username: process.env.MAILER_USERNAME || "",
       password: process.env.MAILER_PASSWORD || "",
     },
