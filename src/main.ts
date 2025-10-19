@@ -7,10 +7,10 @@ import cookieParser from "cookie-parser";
 
 import { AppModule } from "./app.module";
 import { MulterExceptionFilter, ValidationExceptionFactory } from "./lib/extensions/exception";
-import { RouteLogger } from "./lib/extensions/logger";
+// import { RouteLogger } from "./lib/extensions/logger";
 
 async function bootstrap() {
-  const appPrefix = process.env.APP_NAME || "MCToolz";
+  // const appPrefix = process.env.APP_NAME || "MCToolz";
   const corsOrigin = process.env.APP_CORS || "http://localhost:3355";
 
   const app = await NestFactory.create<NestExpressApplication>(AppModule, {
@@ -20,7 +20,7 @@ async function bootstrap() {
       credentials: true,
       allowedHeaders: ["Content-Type", "X-Niftyers", "Authorization"],
     },
-    logger: new RouteLogger(appPrefix, { timestamp: false }),
+    // logger: new RouteLogger(appPrefix, { timestamp: false }),
   });
 
   app.set("trust proxy", 1);
