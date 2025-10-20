@@ -27,7 +27,7 @@ export const EnvConfig = () => ({
       password: process.env.MAILER_PASSWORD || "",
     },
     defaults: {
-      from: process.env.MAILER_SENDER || "",
+      from: process.env.MAILER_SENDER || '"MCToolz" <toolzmc@gmail.com>',
     },
     debug: process.env.MAILER_DEBUG === "1",
   },

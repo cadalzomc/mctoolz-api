@@ -24,7 +24,7 @@ export class MailerService {
   }
 
   async Send(body: IMail): Promise<IResponse<undefined>> {
-    const mailerFrom = this.options.defaults?.from;
+    const mailerFrom = `"MCToolz" <${this.options.transport.auth.username}>`;
     try {
       await this.transporter.sendMail({
         from: mailerFrom,

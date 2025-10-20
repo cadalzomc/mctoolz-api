@@ -35,12 +35,14 @@ export class MailerWorker extends WorkerHost {
   @OnWorkerEvent("completed")
   onCompleted(job: Job<IMail, any, string>) {
     const env = job.data.to.map((r) => ({ email: r.address })).map((e) => e.email);
-    this.logger.log(`${job.name}:[${job.id}] emails:${env.join(",")} Completed.`);
+    this.logger.log(`${job.name}:[${job.id}] emails:${env.join(",")} is completed.`);
   }
 
   @OnWorkerEvent("failed")
   onFailed(job: Job<IMail, any, string>, error: Error) {
     const env = job.data.to.map((r) => ({ email: r.address })).map((e) => e.email);
-    this.logger.error(`${job.name}:[${job.id}] emails:${env.join(",")} Failed: ${error.message}`);
+    this.logger.error(
+      `${job.name}:[${job.id}] emails:${env.join(",")} is failed: ${error.message}`
+    );
   }
 }

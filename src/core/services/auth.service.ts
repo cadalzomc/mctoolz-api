@@ -3,7 +3,15 @@ import { JwtService } from "@nestjs/jwt";
 import * as bcrypt from "bcrypt";
 
 import { GenOTP, GetTemplate, TemplateHeader } from "@/lib/common";
-import { DtoRegister, IAuthResponse, IJwtPayload, IJwtValue, IMail, IResponse } from "@/lib/models";
+import {
+  DtoLogin,
+  DtoRegister,
+  IAuthResponse,
+  IJwtPayload,
+  IJwtValue,
+  IMail,
+  IResponse,
+} from "@/lib/models";
 
 import { DbService } from "./db.service";
 import { QueueService } from "./queue.service";
@@ -17,6 +25,66 @@ export class AuthService {
     private jwt: JwtService,
     private readonly queues: QueueService
   ) {}
+
+  Login = async (payload: DtoLogin): Promise<IResponse<IAuthResponse>> => {
+    try {
+      const existingUser = await this.db.user.findUnique({
+        where: {
+          email: payload.email,
+        },
+      });
+
+      if (!existingUser) {
+        return {
+          code: "NotFound",
+          message: "Email does not exist. Please try again",
+        };
+      }
+
+      if (existingUser.status === "LOCKED") {
+        return {
+          code: "Locked",
+          message: "Account is locked. Please contact support",
+        };
+      }
+
+      const isMatch = await bcrypt.compare(payload.password, existingUser.password);
+
+      if (!isMatch) {
+        return {
+          code: "Invalid",
+          message: "Invalid password. Please try again",
+        };
+      }
+
+      const jwtPayload: IJwtPayload = {
+        sub: existingUser.id.toString(),
+        email: existingUser.email,
+        role: existingUser.role as string,
+      };
+
+      const token = this.jwt.sign(jwtPayload);
+      const value = this.jwt.verify<IJwtValue>(token);
+      const expiredAt = new Date(value.exp * 1000);
+
+      return {
+        code: "Success",
+        message: "Authorized",
+        data: {
+          id: existingUser.id,
+          token,
+          expiredAt,
+          role: existingUser.role,
+        },
+      };
+    } catch (err) {
+      this.logger.error({ action: "Login", err });
+      return {
+        code: "Error",
+        message: "Something went wrong",
+      };
+    }
+  };
 
   Register = async (payload: DtoRegister): Promise<IResponse<undefined>> => {
     try {
@@ -96,6 +164,66 @@ export class AuthService {
     }
   };
 
+  Resend = async (email: string): Promise<IResponse<undefined>> => {
+    try {
+      const existingUser = await this.db.user.findFirst({
+        where: {
+          email,
+        },
+      });
+
+      if (!existingUser) {
+        return {
+          code: "NotFound",
+          message: "Email does not exists",
+        };
+      }
+
+      const otp = GenOTP();
+
+      await this.db.token.deleteMany({
+        where: { owner: email },
+      });
+
+      await this.db.token.create({
+        data: {
+          type: "OTP",
+          token: otp.value,
+          expiresAt: otp.expiresAt,
+          owner: email,
+          purpose: "Resend: Account verification",
+        },
+      });
+
+      const html = GetTemplate("register", {
+        header: { ...TemplateHeader },
+        data: {
+          otp: otp.value,
+          name: existingUser.name,
+        },
+      });
+
+      const mail: IMail = {
+        to: [{ name: existingUser.name, address: email }],
+        subject: "MCToolz Account Verification",
+        html,
+      };
+
+      await this.queues.addMail(mail);
+
+      return {
+        code: "Success",
+        message: `A new verification code is sent to ${email}`,
+      };
+    } catch (err) {
+      this.logger.error({ action: "Resend", err });
+      return {
+        code: "Error",
+        message: "Something went wrong",
+      };
+    }
+  };
+
   Verify = async (email: string, token: string): Promise<IResponse<IAuthResponse>> => {
     try {
       const username = email.toLowerCase();
@@ -111,14 +239,14 @@ export class AuthService {
       if (!existingToken) {
         return {
           code: "Invalid",
-          message: "Invalid token",
+          message: "Invalid token. Please try again",
         };
       }
 
       if (existingToken.expiresAt < now) {
         return {
           code: "Expired",
-          message: "Token has expired",
+          message: "Token has expired. Try resend code",
         };
       }
 
